@@ -1,0 +1,14 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: nunito, sans-serif;
+    color: #404040;
+}
+
+:root {
+    --purple: #581b98;
+    --light-purple: #9c1de7;
+    --pink: #f3558e;
+    --yellow: ##faee1c;
+}
