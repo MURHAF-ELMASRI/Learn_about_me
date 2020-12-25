@@ -37,7 +37,7 @@ const toggleLogoutIn = (isLogged) => {
                 <Link to="/login">login</Link>
             </NavItem>
             <NavItem>
-                <Link to="/signup">signpu</Link>
+                <Link to="/signup">signup</Link>
             </NavItem>
         </>
     );
@@ -53,7 +53,7 @@ export default function Header() {
             </NavItem>
             {toggleLogoutIn(user.isLogged)}
             <NavItem>
-                <ImageHolder imgUrl={user.imgUrl} />
+                {user.isLogged && <ImageHolder imgUrl={user.imgUrl} />}
             </NavItem>
         </Nav>
     );

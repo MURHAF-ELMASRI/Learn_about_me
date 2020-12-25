@@ -6,11 +6,15 @@ const cookieParser=require("cookie-parser")
 const passport=require('passport');
 const morgan=require('morgan')
 const helmet=require('helmet')
-const route=require('./Routes/Routes')
+const routes = require('./Routes/Routes')
+const dotenv=require('dotenv')
 //middleware init
-require('dotevn').config({'./config.env'})
+dotenv.config({path:"./config.env"});
+
+
 const app = express();
-app.use(bodyParser.urlencoded({extends:false}))
+app.use(express.urlencoded({extended:false}))
+app.use(express.json())
 app.use(morgan('common'))
 app.use(helmet())
 app.use(session({
@@ -33,7 +37,15 @@ app.use((req, res, next, err) => {
     }
 })
 
-const port=process.env.port
-app.listen(3000, () => {
-    console.log('Server listening on port 3000');
-})
+const port = process.env.PORT;
+const dbname = process.env.db_name
+const URI = process.env.db_URL;
+console.log(`${URI}${dbname}`);
+mongoose
+    .connect(`${URI}/${dbname}`)
+    .then(
+        app.listen(port, () => {
+            console.log(`Server listening on port ${port}`);
+        })
+    )
+    .catch((err) => console.log('server not running' + err));

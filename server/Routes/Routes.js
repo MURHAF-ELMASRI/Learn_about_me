@@ -15,25 +15,32 @@ route.get('/', (req, res, next) => {
 });
 
 route.post('/signup', async (req, res, next) => {
-    const { userName, password } = req.body;
-    //check if user exist
-    User.findOne(userName, (err, user) => {
-        if (err) next(err);
-        res.status(400).json({ msg: 'User Name already exist' });
-        next(err)
-    });
+    try {
+        console.log('print any thing please');
+        // console.log(req.body);
+        const { userName, password } = req.body;
+        console.log(userName);
+        console.log(password);
+        //check if user exist
+        const user = await User.findOne({ userName: userName });
+        if (user) {
+            return res.status(400).json({ msg: 'this user already exist' });
+        }
 
-    if (password.length < 6)
-        return res
-            .status(400)
-            .json({ msg: 'Password is at least 6 characters long.' });
+        if (password.length < 6)
+            return res.status(400).json({
+                msg: 'Password is at least 6 characters long.',
+            });
 
-    newUser = new User({
-        userName: userName,
-        password: password,
-    });
-    await newUser.save();
-    res.json({msg:"Signed up successfully"})
+        newUser = new User({
+            userName: userName,
+            password: password,
+        });
+        await newUser.save();
+        res.json({ msg: 'Signed up successfully' });
+    } catch (err) {
+        res.status(500).json({ msg: err.message });
+    }
 });
 
 route.get('/login', (req, res, next) => {});
