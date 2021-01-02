@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+
 // const SALT_FACTOR = process.env.salt_factor;
 
 const userSchema = mongoose.Schema({
@@ -40,6 +40,6 @@ userSchema.methods.checkPassword = (pass,done) => {
     })
 }
 
-var User = mongoose.model("User",userSchema)
+var User = mongoose.model("users",userSchema)
 
 module.exports=User

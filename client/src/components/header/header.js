@@ -25,7 +25,7 @@ const NavItem = styled.div`
         text-decoration: none;
         color: #faee1c;
     }
-    ${(props) => (props.start ? 'margin-right:auto' : '')}
+   ${(props) => (props.start ? 'margin-right:auto' : '')}
 `;
 
 const toggleLogoutIn = (isLogged) => {
@@ -46,11 +46,11 @@ const toggleLogoutIn = (isLogged) => {
 };
 
 export default function Header() {
-    const { user, setUser } = useContext(GlobalState);
+    const { user } = useContext(GlobalState);
     console.log(user.imgUrl);
     return (
         <Nav>
-            <NavItem start>
+            <NavItem start={"true"}>
                 <Link to="/">Home</Link>
             </NavItem>
             {toggleLogoutIn(user.isLogged)}

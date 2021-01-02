@@ -4,7 +4,7 @@ import Signup from './signup/signup';
 import Login from './login/login';
 import Logout from './logout/logout';
 import { AnimatePresence } from 'framer-motion';
-
+import User from './User/user'
 function MainPages() {
     const location = useLocation();
     return (
@@ -14,6 +14,7 @@ function MainPages() {
                 <Route  path="/signup" component={Signup} />
                 <Route path="/login" component={Login} />
                 <Route  path="/logout" component={Logout} />
+                <Route  path="/user/:userId" component={User} />
             </Switch>
         </AnimatePresence>
     );

@@ -13,7 +13,8 @@ import {
     PassLogo,
     Btn,
     Container,
-    Walk
+    Walk,
+    Message
 } from './signupStyle';
 import { useState } from 'react';
 import avatarLogo from '../../util/undraw_male_avatar_323b.svg';
@@ -21,6 +22,24 @@ import walkLogo from './undraw_relaxing_walk_mljx.svg';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
+// const port = 4000; //port used by the server
+
+const sendData = async (event, userName, password) => {
+    var data = {
+        userName: userName,
+        password: password,
+    };
+    event.preventDefault();
+    await axios
+        .post('http://localhost:4000/signup', data)
+        .then((res) => {
+            console.log(res.data);
+            window.location.href = '/';
+        })
+        .catch((err) => alert(err.response.data.msg));
+};
+
+//Initialze Animation rul for framer motion
 
 const pageVar = {
     in: {
@@ -39,10 +58,10 @@ const waveAnimate = {
     },
     exit: {
         x: -500,
-        transition:{duration:1}
+        transition: { duration: 1 },
     },
 };
-
+// style Element used in Animation
 const Wave = styled(motion.div)`
     position: fixed;
     background-color: #9c1de7;
@@ -53,13 +72,12 @@ const Wave = styled(motion.div)`
     top: 0px;
     left: -500px;
 `;
-
+//Main Component ---------------------
 const SignUp = () => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [userFocus, setUserFoucs] = useState(false);
     const [passFoucs, setPassFoucs] = useState(false);
-
     return (
         <>
             <Wave
@@ -75,19 +93,23 @@ const SignUp = () => {
                 animate="animate"
                 exit="exit"
                 variants={pageVar}
-                
             >
                 <Container>
                     <Walk>
                         <img src={walkLogo} alt="walk logo" />
                     </Walk>
                     <LoginContent>
-                        <Form method="post">
+                        <Form
+                            method="post"
+                            onSubmit={(event) =>
+                                sendData(event, userName, password)
+                            }
+                        >
                             <Avatar src={avatarLogo} />
                             <Title>welcome</Title>
                             <InputDiv one focus={userFocus}>
                                 <UserLogo focus={userFocus}>
-                                    <i class="fas fa-user"></i>
+                                    <i className="fas fa-user"></i>
                                 </UserLogo>
                                 <Div>
                                     <H5 focus={userFocus}>User Name</H5>
@@ -97,7 +119,6 @@ const SignUp = () => {
                                         value={userName}
                                         onChange={(e) => {
                                             setUserName(e.target.value);
-                                            console.log(e.target.value);
                                         }}
                                         onFocus={() => setUserFoucs(true)}
                                         onBlur={() =>
@@ -110,7 +131,7 @@ const SignUp = () => {
                             </InputDiv>
                             <InputDiv pass focus={passFoucs}>
                                 <PassLogo focus={passFoucs}>
-                                    <i class="fas fa-lock"></i>
+                                    <i className="fas fa-lock"></i>
                                 </PassLogo>
                                 <Div>
                                     <H5 focus={passFoucs}>Password</H5>

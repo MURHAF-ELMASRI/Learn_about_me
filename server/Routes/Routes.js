@@ -5,8 +5,8 @@ const route = express.Router();
 route.use(passport.initialize());
 
 //send users
-route.get('/', (req, res, next) => {
-    User.find()
+route.get('/users', (req, res, next) => {
+    User.find({}, { userName: 1, createdAt: 1, imgUrl: 1, _id: 1 })
         .sort({ createdAt: 'Descending' })
         .exec((err, users) => {
             if (err) next(err);
@@ -19,7 +19,7 @@ route.post('/signup', async (req, res, next) => {
         console.log('print any thing please');
         // console.log(req.body);
         const { userName, password } = req.body;
-        console.log(userName);
+        console.log({userName});
         console.log(password);
         //check if user exist
         const user = await User.findOne({ userName: userName });
@@ -43,7 +43,16 @@ route.post('/signup', async (req, res, next) => {
     }
 });
 
-route.get('/login', (req, res, next) => {});
+route.get('/users/user',async (req, res, next) => {
+    const id = req.query.id;
+    User.find({ _id: id },{userName:1,createdAt:1,bio:1,imgUrl:1}).exec((err, user) => {
+        if (err) next(err)
+        console.log(user);
+        res.json(user)
+    }
+    )
+
+});
 
 route.post('/login', (req, res, next) => {});
 route.get('/edit', (req, res, next) => {});

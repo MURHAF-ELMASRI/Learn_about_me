@@ -7,15 +7,16 @@ const passport=require('passport');
 const morgan=require('morgan')
 const helmet=require('helmet')
 const routes = require('./Routes/Routes')
-const dotenv=require('dotenv')
+const dotenv = require('dotenv')
+const cors = require('cors');
 //middleware init
 dotenv.config({path:"./config.env"});
 
-
 const app = express();
+app.use(cors())
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
-app.use(morgan('common'))
+app.use(morgan('short'))
 app.use(helmet())
 app.use(session({
     secret: 'generetescrete',
@@ -41,8 +42,13 @@ const port = process.env.PORT;
 const dbname = process.env.db_name
 const URI = process.env.db_URL;
 console.log(`${URI}${dbname}`);
+
 mongoose
-    .connect(`${URI}/${dbname}`)
+    .connect(`${URI}/${dbname}`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex:true
+    })
     .then(
         app.listen(port, () => {
             console.log(`Server listening on port ${port}`);

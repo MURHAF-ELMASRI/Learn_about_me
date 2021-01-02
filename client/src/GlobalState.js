@@ -8,14 +8,15 @@ export function StateProvider({ children }) {
     const [user, setUser] = useState({});
     
     useEffect(() => {
-        axios.get('/user')
-            .then(data => {
-                console.log(data.json);
-            })
-            .catch(
-                (err)=> console.log(err)
-            )
-        
+        if (localStorage.id) {
+            axios.get('http://localhost:4000/user')
+                .then(data => {
+                    console.log(data.json);
+                })
+                .catch(
+                    (err) => console.log(err)
+                )
+        }
     }, []);
 
     return <GlobalState.Provider value={{ user: user, setUser: setUser } }>{children}</GlobalState.Provider>;

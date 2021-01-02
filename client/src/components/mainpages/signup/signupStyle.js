@@ -149,4 +149,3 @@ export const Btn = styled.button`
         background-position: right;
     }
 `;
-
