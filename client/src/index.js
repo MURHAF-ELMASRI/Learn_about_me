@@ -1,8 +1,9 @@
-import ReactDom from 'react-dom';
+import reactDom from 'react-dom';
 import App from './app';
 import { BrowserRouter } from 'react-router-dom';
 import { GlobalStyles } from './GlobalStyle';
-ReactDom.render(
+
+reactDom.render(
     <BrowserRouter>
         <App />
         <GlobalStyles/>

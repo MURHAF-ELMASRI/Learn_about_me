@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import './header.css';
 import { Link } from 'react-router-dom';
 import { GlobalState } from '../../GlobalState';
-import ImageHolder from '../util/ImageHolder/ImageHolder.js';
+import ImageHolder from '../util/ImageHolder/ImageHoder';
 import styled from 'styled-components';
 
 const Nav = styled.header`
+    position:relative;
     background-color: #581b98;
     display: flex;
     flex-direction: row;
@@ -13,6 +14,7 @@ const Nav = styled.header`
     height: 5rem;
     justify-content: flex-end;
     align-items: center;
+    z-index:100;
     box-shadow:0px 5px 20px 1px rgba(0,0,0,0.4) ;
 
 `;
