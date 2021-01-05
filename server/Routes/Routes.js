@@ -91,6 +91,13 @@ route.post('/login',(req, res, next) => {
         })(req, res, next);
 });
 
+route.get('/logout', (req, res, next) => {
+    console.log('logout');
+    req.logOut();
+    res.json({ mgs: 'done' })
+    next()
+})
+
 route.get('/edit', (req, res, next) => {});
 
 module.exports = route;

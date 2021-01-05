@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { GlobalState } from '../../GlobalState';
 import ImageHolder from '../util/ImageHolder/ImageHoder';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const Nav = styled.header`
     position:relative;
@@ -30,10 +31,24 @@ const NavItem = styled.div`
    ${(props) => (props.start ? 'margin-right:auto' : '')}
 `;
 
-const toggleLogoutIn = (isLogged) => {
+const logout = (setUser) => {
+    const config = {
+        url: 'http://localhost:4000/logout',
+        method: 'GET',
+        withCredentials: true,
+    };
+    axios(config).then(res=>
+        console.log('logged out')
+    ).catch(err => console.log(err))
+    
+    setUser(null)
+    localStorage.clear()
+}
+
+const toggleLogoutIn = (isLogged,setUser) => {
     return isLogged ? (
         <NavItem>
-            <Link to="/logout">logout</Link>
+            <button onClick={()=>logout(setUser)}>Log out</button>
         </NavItem>
     ) : (
         <>
@@ -48,14 +63,14 @@ const toggleLogoutIn = (isLogged) => {
 };
 
 export default function Header() {
-    const { user } = useContext(GlobalState);
+    const { user,setUser } = useContext(GlobalState);
     return (
         <Nav>
             <NavItem start={"true"}>
                 <Link to="/">Home</Link>
                 {user && <Link to={`/user/${user.id}`}>{user.userName}</Link>}
             </NavItem>
-            {toggleLogoutIn(user?true:false)}
+            {toggleLogoutIn(user?true:false,setUser)}
             <NavItem>
                 {user && user.imgUrl && <ImageHolder imgUrl={user.imgUrl} />}
             </NavItem>
