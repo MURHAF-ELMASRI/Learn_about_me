@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 
-
+export const LoginPage = styled.div`
+    width: 100%;
+    height: 100%;
+`;
 export const Container = styled.div`
     padding: 0 3rem;
-    position:relative;
+    position: relative;
     display: grid;
     width: 100%;
     height: 85vh;
@@ -11,7 +14,7 @@ export const Container = styled.div`
     justify-content: end;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 12rem;
-    overflow:hidden;
+    overflow: hidden;
 `;
 
 //logos

@@ -5,13 +5,18 @@ import axios from 'axios'
 export const GlobalState = react.createContext();
 
 export function StateProvider({ children }) {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState();
     
     useEffect(() => {
         if (localStorage.id) {
-            axios.get('http://localhost:4000/user')
-                .then(data => {
-                    console.log(data.json);
+            axios.get(`http://localhost:4000/users/user`, {
+                params: {
+                    id:localStorage.id
+                }
+            })
+                .then(res => {
+                
+                  setUser(res.data.user)
                 })
                 .catch(
                     (err) => console.log(err)

@@ -21,6 +21,8 @@ const Nav = styled.header`
 const NavItem = styled.div`
     font-size: 1.5rem;
     margin: 0.5rem;
+    display: flex;
+    column-gap:3rem;
     a {
         text-decoration: none;
         color: #faee1c;
@@ -47,15 +49,15 @@ const toggleLogoutIn = (isLogged) => {
 
 export default function Header() {
     const { user } = useContext(GlobalState);
-    console.log(user.imgUrl);
     return (
         <Nav>
             <NavItem start={"true"}>
                 <Link to="/">Home</Link>
+                {user && <Link to={`/user/${user.id}`}>{user.userName}</Link>}
             </NavItem>
-            {toggleLogoutIn(user.isLogged)}
+            {toggleLogoutIn(user?true:false)}
             <NavItem>
-                {user.isLogged && <ImageHolder imgUrl={user.imgUrl} />}
+                {user && user.imgUrl && <ImageHolder imgUrl={user.imgUrl} />}
             </NavItem>
         </Nav>
     );

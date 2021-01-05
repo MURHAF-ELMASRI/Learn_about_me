@@ -12,9 +12,9 @@ const userSchema = mongoose.Schema({
 })
 
 //Add method to schema
-userSchema.methods.name = function (){
-    return this.displayName || this.userName
-}
+// userSchema.methods.name = function (){
+//     return this.displayName || this.userName
+// }
 //I was trying here to do like the book action in express but it so confusing and I decide to change it.
 // userSchema.pre("save",(done) => {
 //     const pass = this.password;
@@ -34,11 +34,11 @@ userSchema.methods.name = function (){
 //     })
 // })
 
-userSchema.methods.checkPassword = (pass,done) => {
-    bcrypt.compare(pass, this.password, (err, isMatch) => {
-        done(err,isMatch)
-    })
-}
+// userSchema.methods.checkPassword = (pass,done) => {
+//     bcrypt.compare(pass, this.password, (err, isMatch) => {
+//         done(err,isMatch)
+//     })
+// }
 
 var User = mongoose.model("users",userSchema)
 

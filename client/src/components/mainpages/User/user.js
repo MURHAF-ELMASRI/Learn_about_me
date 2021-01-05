@@ -1,32 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import axios from 'axios';
 import preLoader from './813.svg';
-import styled from 'styled-components';
+import { UserCont, ProfileImg, UserPage, LoaderContainer } from './userStyle'
+import avatar from '../../util/undraw_male_avatar_323b.svg'
+
 const sleep = async () => {
     return new Promise((resolve) => setTimeout(resolve, 2000));
 };
 
-const UserCont = styled(motion.div)`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-const ProfileImg = styled.img`
-    width: 200px;
-`;
-const UserPage = styled(motion.div)`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-const LoaderContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 200px;
-`;
+
+
+
 export default function User() {
     const [loading, setLoading] = useState(false);
     const { userId } = useParams();
@@ -65,8 +50,7 @@ export default function User() {
         if (info.msg) return <h1>Error fetching data</h1>;
         console.log(info);
         return (
-            <UserCont>
-                <ProfileImg src={info.imgUrl} />
+            <UserCont initial={{x:-200}} animate={{x:0}}>
                 <h1>{info.userName}</h1>
                 <p>Joined {info.createdAt}</p>
                 <p>{info.bio}</p>
@@ -75,8 +59,18 @@ export default function User() {
     };
 
     return (
-        <UserPage exit={{ opacity: 0 }}>
+        <UserPage
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
             {loading && showLoader}
+            {info&&<ProfileImg
+                src={info.imgUrl?info.imgUrl:avatar}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                foundImg={info.imgUrl?true:false}
+            />}
             {showUser(info)}
         </UserPage>
     );

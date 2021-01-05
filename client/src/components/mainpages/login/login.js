@@ -1,5 +1,5 @@
 // import axios from 'axios';
-import * as React from 'react';
+import React, { useState, useContext} from 'react';
 import {
     LoginContent,
     Form,
@@ -13,13 +13,16 @@ import {
     PassLogo,
     Btn,
     Container,
+    LoginPage,
 } from './loginStyle';
-import { useState } from 'react';
 import parkImg from './undraw_amusement_park_17oe.svg';
 import avatarLogo from '../../util/undraw_male_avatar_323b.svg';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-
+import axios from 'axios';
+import { GlobalState } from '../../../GlobalState';
+import {Redirect} from 'react-router-dom'
+//Animated component
 const Wave = styled(motion.div)`
     position: fixed;
     background-color: #9c1de7;
@@ -31,10 +34,7 @@ const Wave = styled(motion.div)`
     left: -1000px;
 `;
 
-const LoginPage = styled.div`
-    width: 100%;
-    height: 100%;
-`;
+//Animation props
 const transition = { duration: 1.4, ease: [0.6, 0.01, -0.05, 1] };
 const waveVar = {
     animate: {
@@ -59,21 +59,49 @@ const loginContainerVar = {
         transition: { delay: 1.5, ...transition },
     },
     exit: {
-        opacity:0
-    }
+        opacity: 0,
+    },
 };
 
 const Park = styled(motion.div)`
     position: relative;
     width: 75%;
 `;
+//Main component
 
-const LogIn = () => {
+export default function LogInPage() {
+    const { setUser } = useContext(GlobalState);
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [userFocus, setUserFoucs] = useState(false);
     const [passFoucs, setPassFoucs] = useState(false);
+    const [redirect,setRedirect]=useState(false)
+    const LogIn = (e, userName, password) => {
+        e.preventDefault();
+        console.log({ userName, password });
+        const config = {
+            url: 'http://localhost:4000/login',
+            method: 'POST',
+            data: { username: userName, password:password},
+            withCredentials: true,
+            
+        };
+        axios(config)
+            .then((res) => {
+                console.log(res.data.user);
+                setUser(res.data.user)
+                alert("succeeded")
+                setRedirect(true)
+            })
+            .catch((err) => {
+                if (err.response) alert(err.response.data.msg) 
+                else alert(err)
+            });
+    };
+
     return (
+        <>
+        {redirect&& <Redirect to="./"/>}
         <LoginPage>
             <Wave
                 animate="animate"
@@ -97,12 +125,14 @@ const LogIn = () => {
                     </Park>
                     <motion.div variants={loginContainerVar}>
                         <LoginContent>
-                            <Form method="post">
+                            <Form
+                                onSubmit={(e) => LogIn(e, userName, password)}
+                            >
                                 <Avatar src={avatarLogo} />
                                 <Title>welcome</Title>
                                 <InputDiv one focus={userFocus}>
                                     <UserLogo focus={userFocus}>
-                                        <i class="fas fa-user"></i>
+                                        <i className="fas fa-user"></i>
                                     </UserLogo>
                                     <Div>
                                         <H5 focus={userFocus}>User Name</H5>
@@ -112,7 +142,7 @@ const LogIn = () => {
                                             value={userName}
                                             onChange={(e) => {
                                                 setUserName(e.target.value);
-                                                console.log(e.target.value);
+                                                
                                             }}
                                             onFocus={() => setUserFoucs(true)}
                                             onBlur={() =>
@@ -125,7 +155,7 @@ const LogIn = () => {
                                 </InputDiv>
                                 <InputDiv pass focus={passFoucs}>
                                     <PassLogo focus={passFoucs}>
-                                        <i class="fas fa-lock"></i>
+                                        <i className="fas fa-lock"></i>
                                     </PassLogo>
                                     <Div>
                                         <H5 focus={passFoucs}>Password</H5>
@@ -146,14 +176,13 @@ const LogIn = () => {
                                         />
                                     </Div>
                                 </InputDiv>
-                                <Btn>SIGN UP</Btn>
+                                <Btn>Log in</Btn>
                             </Form>
                         </LoginContent>
                     </motion.div>
                 </Container>
             </motion.div>
-        </LoginPage>
+            </LoginPage>
+            </>
     );
-};
-
-export default LogIn;
+}

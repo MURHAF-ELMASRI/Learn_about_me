@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 // import {useState} from 'react'
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { useEffect, useState } from 'react';
+
 const Container = styled(motion.div)`
     background-color: whitesmoke;
     display: flex;
@@ -34,11 +37,31 @@ const Name = styled.h1`
 const Date = styled.h2``;
 const Body = styled.p``;
 
-export default function Card({ info, item }) {
+const cardVar = {
+    hidden: { opacity: 0, x: -100 },
+};
+
+export default function Card({ info }) {
+    const [ref, inView] = useInView();
+    const controls = useAnimation();
+    useEffect(() => {
+        if (inView)
+            controls.start({
+                opacity: 1,
+                x: 0,
+                transition:{delay:0.3,duration:.7}
+            });
+        
+    }, [inView]);
+
     return (
-        <Container variants={item}>
-            <NameCont animate={{ width: '0% ' }} animate={{ width: '100% ' }} >
-                
+        <Container
+            variants={cardVar}
+            ref={ref}
+            animate={controls}
+            initial="hidden"
+        >
+            <NameCont animate={{ width: '0% ' }} animate={{ width: '100% ' }}>
                 <Name>
                     <Link to={`/user/${info._id}`}>{info.userName}</Link>
                 </Name>
