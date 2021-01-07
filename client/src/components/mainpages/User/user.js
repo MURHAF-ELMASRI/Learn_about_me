@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import preLoader from './813.svg';
 import { UserCont, ProfileImg, UserPage, LoaderContainer } from './userStyle'
 import avatar from '../../util/undraw_male_avatar_323b.svg'
-
+import { GlobalState } from '../../../GlobalState';
+import {Link} from 'react-router-dom'
 const sleep = async () => {
     return new Promise((resolve) => setTimeout(resolve, 2000));
 };
@@ -15,7 +16,8 @@ const sleep = async () => {
 export default function User() {
     const [loading, setLoading] = useState(false);
     const { userId } = useParams();
-    const [info, setInfo] = useState();
+    const [info, setInfo] = useState();//get the information from server and put here
+    const {user}=useContext(GlobalState)
 
     console.log(userId);
 
@@ -72,6 +74,7 @@ export default function User() {
                 foundImg={info.imgUrl?true:false}
             />}
             {showUser(info)}
+            {user&&userId===user.id?<Link to='/edit'>Edit</Link>:''}
         </UserPage>
     );
 }

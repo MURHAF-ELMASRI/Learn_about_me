@@ -89,7 +89,6 @@ export default function LogInPage() {
         axios(config)
             .then((res) => {
                 console.log(res.data.user);
-                setUser(res.data.user)
                 alert("succeeded")
                 setRedirect(true)
             })

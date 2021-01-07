@@ -1,63 +1,72 @@
-import { useEffect, useState,useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState,useContext } from 'react';
 import axios from 'axios';
 import preLoader from './813.svg';
 import { UserCont, ProfileImg, UserPage, LoaderContainer } from './userStyle';
 import avatar from '../../util/undraw_male_avatar_323b.svg';
 import { GlobalState } from '../../../GlobalState';
-
+import { Redirect } from 'react-router-dom';
+import styled from 'styled-components'
+import { Div } from '../login/loginStyle';
 const sleep = async () => {
     return new Promise((resolve) => setTimeout(resolve, 2000));
 };
+
+const Form = styled.form`
+    display:flex;
+    flex-direction:column;
+    row-gap:3rem;
+    border:2px solid gray;
+`
+
 // utility function
 const showLoader = (
     <LoaderContainer>
         <img src={preLoader} alt="Profile photo" />
     </LoaderContainer>
 );
-// utility function
 
-const showUser = (info) => {
-    if (!info) return;
-    if (info.msg) return <h1>Error fetching data</h1>;
-    console.log(info);
-    return (
-        <UserCont initial={{ x: -200 }} animate={{ x: 0 }}>
-            <h1>{info.userName}</h1>
-            <p>Joined {info.createdAt}</p>
-            <p>{info.bio}</p>
-        </UserCont>
-    );
+
+// utility function
+const showUser = (user,props) => {
+    if (!user) return
+    if (user.msg) return <h1>Error fetching data</h1>;
+    console.log(user)
 };
 //User Component
-export default function User() {
-    const [loading, setLoading] = useState(false);
-    const { userId } = useParams();
-    const [info, setInfo] = useState();
-    const {id}=useContext(GlobalState)
-    console.log(userId);
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        setLoading(true);
-        await sleep();
-        await axios
-            .get('http://localhost:4000/users/user', {
-                params: {
-                    id: userId,
-                },
+        
+const User=({info,setInfo})=>{
+    
+    const InputContainer = ({ title, value, name }) => {
+        const handleChange = (e) => {
+            const inputName = e.target.name
+            const value=e.target.value
+            setInfo({
+                [inputName]:value
             })
-            .then((res) => setInfo(...res.data))
-            .catch((err) => {
-                if (err.respond) setInfo({ msg: err.respond.msg });
-                else setInfo({ msg: err });
-            });
-        setLoading(false);
-    };
-
+        }
+        return (
+            <div>
+                <title>{title}</title>
+                <input name={name} type='text' value={value} onChange={(e)=>handleChange(e)} />
+            </div>
+        )
+    }
+        return(
+          <UserCont initial={{ x: -200 }} animate={{ x: 0 }}>
+            <Form>
+                    <InputContainer name={'userName'} value={info.useName} title="User Name"/>
+                    <InputContainer name={'password'} value={info.password} title="Password"/>
+                    <InputContainer name={'bio'} value={info.bio} title="Bio"/>
+            </Form>
+        </UserCont>
+        )
+                
+}
+ //main component
+export default function Edit() {
+    const [loading, setLoading] = useState(false);
+    const {user,setUser}=useContext(GlobalState)
+    const [info, setInfo] = useState({ ...user })
     return (
         <UserPage
             initial={{ opacity: 0 }}
@@ -65,15 +74,16 @@ export default function User() {
             exit={{ opacity: 0 }}
         >
             {loading && showLoader}
-            {info && (
+            {user?(
                 <ProfileImg
-                    src={info.imgUrl ? info.imgUrl : avatar}
+                    src={user.imgUrl ? user.imgUrl : avatar}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    foundImg={info.imgUrl ? true : false}
+                    foundImg={user.imgUrl ? true : false}
                 />
-            )}
-            {showUser(info)}
+            ):<Redirect to={"/"}/>}
+            <User info={info} setInfo={setInfo} />
         </UserPage>
     );
 }
+

@@ -8,12 +8,8 @@ export function StateProvider({ children }) {
     const [user, setUser] = useState();
     
     useEffect(() => {
-        if (localStorage.id) {
-            axios.get(`http://localhost:4000/users/user`, {
-                params: {
-                    id:localStorage.id
-                }
-            })
+        console.log(document.cookie+' global state');
+            axios.get(`http://localhost:4000/users/user/info`)
                 .then(res => {
                 
                   setUser(res.data.user)
@@ -21,7 +17,7 @@ export function StateProvider({ children }) {
                 .catch(
                     (err) => console.log(err)
                 )
-        }
+        
     }, []);
 
     return <GlobalState.Provider value={{ user: user, setUser: setUser } }>{children}</GlobalState.Provider>;

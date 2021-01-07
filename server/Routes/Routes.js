@@ -1,10 +1,8 @@
 const express = require('express');
 const passport = require('passport');
 const User = require('../model/users');
-const bcrypt =require('bcrypt')
+const bcrypt = require('bcrypt');
 const route = express.Router();
-
-
 
 //send users
 route.get('/users', (req, res, next) => {
@@ -33,22 +31,20 @@ route.post('/signup', async (req, res, next) => {
             return res.status(400).json({
                 msg: 'Password is at least 6 characters long.',
             });
-       
+
         await bcrypt.hash(password, 10, (err, hashed) => {
-            console.log('err  '+err);
-            if (err)
-                next(err)
+            console.log('err  ' + err);
+            if (err) next(err);
             newUser = new User({
                 userName: userName,
                 password: hashed,
             });
-        })
+        });
 
-        
         await newUser.save();
         res.json({ msg: 'Signed up successfully' });
     } catch (err) {
-       next(err)
+        next(err);
     }
 });
 //Send the general user info
@@ -64,39 +60,38 @@ route.get('/users/user', async (req, res, next) => {
     });
 });
 
-route.post('/login',(req, res, next) => {
-        passport.authenticate('local', (err, user, info) => {
-            console.log(info);
-            if (err) {
-                console.log(err);
-                return next(err);
-            }
-            if (!user) {
-                
-                res.status(400).json({ msg:'user Is not exists' });
-            }
-            if (info) res.status(400).json({ msg: info.message });
-            req.login(user, (err) => {
-                if (err) return next(err);
-                res.json({
-                    user: {
-                        id:user._id,
-                        userName: user.userName,
-                        imgUrl: user.imgUrl,
-                        bio: user.bio,
-                        createdAt: user.createdAt
-                    }
-                });
-            });
-        })(req, res, next);
+route.get('/users/user/info', async (req, res, next) => {
+    if (req.isAuthenticated)
+        console.log(req.user+' 65');
+    else
+        res.status(401).json({msg:'unAuthorized'})
+
+});
+
+route.post('/login', async (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        console.log(info);
+        if (err) {
+            console.log(err);
+            return next(err);
+        }
+        if (!user) {
+            res.status(400).json({ msg: 'user Is not exists' });
+        }
+        if (info) res.status(400).json({ msg: info.message });
+        req.login(user, (err) => {
+            if (err) return next(err);
+            res.json({ msg: 'succeed' });
+        });
+    })(req, res, next);
 });
 
 route.get('/logout', (req, res, next) => {
     console.log('logout');
     req.logOut();
-    res.json({ mgs: 'done' })
-    next()
-})
+    res.json({ mgs: 'done' });
+    next();
+});
 
 route.get('/edit', (req, res, next) => {});
 
