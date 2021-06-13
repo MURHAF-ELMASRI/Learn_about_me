@@ -1,5 +1,6 @@
 # Learn_about_me 📱
-Small socialmedia fullstack web application using for :
+Small socialmedia fullstack web application.<br>
+used for :
 * **front end** : React,framermotion,cropperjs,styledComponent .
 * **back end** : nodejs,Express,mongoDb,passportjs
 
